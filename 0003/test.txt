@@ -1,0 +1,12 @@
+In this paper, we proposed a new segmentation-based classification
+technique for PolSAR data. The proposed RHLBP
+operator presents satisfactory performance in extracting discriminative
+texture information which guarantee the regional
+homogeneity. Moreover, the color features provide useful
+information for segmentation-based classification. The comparison
+experimental results demonstrate the effectiveness of
+our proposed method for PolSAR image classification. Our experiments
+are mainly based on the false color image obtained
+from the PolSAR data, which show the potential importance
+of the color feature in polarimetric information understanding
+and representation.
