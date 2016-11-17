@@ -6,6 +6,7 @@ __author__ = 'Emma'
 '''
 import os
 import chardet
+import re
 
 '''
 统计代码中的代码、空行、注释行的数目
@@ -16,38 +17,77 @@ Output:
     NullNumber - 空行的行数
     NoteNumber - 注释的行数
 '''
-def statisticCode(codeContent):
+# def statisticCode(codeContent):
+#     codeNumber = 0
+#     nullNumber = 0
+#     noteNumber = 0
+#     noteFlagBe = 0
+#     lineList = codeContent.splitlines() #按行分开
+#     for line in lineList:
+#         if line == '':  #空行
+#             nullNumber += 1
+#         else:
+#             wordList = line.split() #每行的每个单词
+#             if wordList[0][0] == '#':
+#                 noteNumber += 1
+#                 continue
+#             else:
+#                 for word in wordList:
+#                     if noteFlagBe == 1 and word != "'''":
+#                         noteNumber += 1
+#                         break
+#                     if word == "'''":
+#                         if noteFlagBe == 1:
+#                             noteFlagBe = 0
+#                             noteNumber += 1
+#                         else:
+#                             noteFlagBe = 1
+#                             noteNumber += 1
+#                             continue
+#                     else:
+#                         codeNumber += 1
+#                         break
+#
+#     return codeNumber,nullNumber,noteNumber
+
+'''
+利用正则条件统计代码中的代码、空行、注释行的数目
+Input:
+    codeCotent- 代码内容
+Output:
+    CodeNumber - 代码的行数
+    NullNumber - 空行的行数
+    NoteNumber - 注释的行数
+'''
+def reStatisticCode(codeCotent):
     codeNumber = 0
     nullNumber = 0
     noteNumber = 0
-    noteFlagBe = 0
-    lineList = codeContent.splitlines() #按行分开
+    flag = 0
+    patern = '.*#'
+    lineList = codeCotent.splitlines()
     for line in lineList:
-        if line == '':  #空行
-            nullNumber += 1
+        if flag == 1 and line != "'''":
+            noteNumber += 1
         else:
-            wordList = line.split() #每行的每个单词
-            if wordList[0][0] == '#':
-                noteNumber += 1
-                continue
-            else:
-                for word in wordList:
-                    if noteFlagBe == 1 and word != "'''":
-                        noteNumber += 1
-                        break
-                    if word == "'''":
-                        if noteFlagBe == 1:
-                            noteFlagBe = 0
-                            noteNumber += 1
-                        else:
-                            noteFlagBe = 1
-                            noteNumber += 1
-                            continue
-                    else:
-                        codeNumber += 1
-                        break
+            if '#' in line:
+                if re.findall(patern, line)[0][:-1].isspace() or re.findall(patern, line)[0][:-1] == '':
+                    noteNumber += 1
+                else:
+                    codeNumber += 1
 
+            elif line == '':
+                nullNumber += 1
+            elif line == "'''":
+                if flag == 0:
+                    flag = 1
+                else:
+                    flag = 0
+                noteNumber += 1
+            else:
+                codeNumber += 1
     return codeNumber,nullNumber,noteNumber
+
 
 def main():
     resourcePath = "D:\\测试"
@@ -60,7 +100,8 @@ def main():
             file = open(resourcePath+'\\'+code,'rb')
             codeContent = file.read().decode('utf-8')
             file.close()
-            CodeNumber,NullNumber,NoteNumber = statisticCode(codeContent)
+            #CodeNumber,NullNumber,NoteNumber = statisticCode(codeContent)
+            CodeNumber,NullNumber,NoteNumber = reStatisticCode(codeContent)
             codeDic["Code"] += CodeNumber
             codeDic["Null"] += NullNumber
             codeDic["Note"] += NoteNumber
